@@ -8,7 +8,7 @@ REM # Target       : Windows 10-11                                    |
 REM # Version      : 1.0                                              |
 REM #                                                                 |
 REM ###################################################################
-
+Ducky_lang ES
 
 
 DELAY 2000
