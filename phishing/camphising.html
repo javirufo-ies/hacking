@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Laboratorio de Concienciación: Ingeniería Social y APIs de Navegador</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        /* Interfaz visual para el usuario (La distracción) */
+        .video-container {
+            margin: 20px 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        /* Componentes de la PoC (Ocultos o visibles según el enfoque de la clase) */
+        #monitor-area {
+            margin-top: 40px;
+            border-top: 2px dashed #ff4d4d;
+            padding-top: 20px;
+            background-color: #fff1f1;
+        }
+        .cam-preview {
+            width: 320px;
+            height: 240px;
+            border: 2px solid #333;
+            background-color: #000;
+        }
+        .gallery {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        .gallery img {
+            width: 150px;
+            border: 2px solid #ff4d4d;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Entorno de Simulación: Análisis de Vectores de Distracción</h2>
+        <p>Este escenario simula cómo un sitio malicioso mantiene la atención del usuario mientras ejecuta procesos en segundo plano.</p>
+
+        <div class="video-container">
+            <iframe width="720" height="405" 
+                src="https://www.youtube.com/embed/TU_ID_DE_VIDEO?autoplay=1" 
+                title="YouTube video player" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowfullscreen>
+            </iframe>
+        </div>
+
+        <div id="monitor-area">
+            <h3>[Vista del Auditor / Panel de Control]</h3>
+            <p>Este panel simula la actividad que ocurre en segundo plano tras otorgar el permiso.</p>
+            
+            <video id="webcam" class="cam-preview" autoplay playsinline></video>
+            
+            <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+
+            <h4>Historial de Capturas Automáticas (Cada 5 segundos):</h4>
+            <div id="gallery" class="gallery">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        const video = document.getElementById('webcam');
+        const canvas = document.getElementById('canvas');
+        const gallery = document.getElementById('gallery');
+        const ctx = canvas.getContext('2d');
+
+        // 1. Solicitar acceso a la cámara al cargar la página
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+            .then(function(stream) {
+                // Asignar el flujo de la cámara al elemento de vídeo en vivo
+                video.srcObject = stream;
+                
+                // 2. Iniciar el temporizador para tomar fotos cada 5 segundos (5000 ms)
+                setInterval(capturarFotograma, 5000);
+            })
+            .catch(function(err) {
+                console.error("Acceso denegó o error en el dispositivo: ", err);
+                gallery.innerHTML = "<p style='color:red;'>Permiso de cámara denegado. La simulación requiere aprobación.</p>";
+            });
+
+        // 3. Función para capturar el fotograma actual del vídeo
+        function capturarFotograma() {
+            if (video.srcObject) {
+                // Dibujar el estado actual del vídeo en el canvas oculto
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                // Convertir el contenido del canvas a una imagen en Base64
+                const dataURL = canvas.toDataURL('image/jpeg');
+                
+                // Crear un elemento de imagen dinámico para la galería
+                const img = document.createElement('img');
+                img.src = dataURL;
+                img.alt = "Captura de seguridad";
+
+                // Insertar la nueva imagen al principio de la galería
+                gallery.insertBefore(img, gallery.firstChild);
+
+                // Limitar la galería a las últimas 4 imágenes para no saturar el navegador
+                if (gallery.children.length > 4) {
+                    gallery.removeChild(gallery.lastChild);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
